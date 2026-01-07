@@ -3,12 +3,14 @@ import {getBooks, getListOfRestEndPoint} from './api/anapioficeandfire'
 import {useState, useEffect} from "react";
 
 function App() {
-    const [list, setList] = useState({});
+    const [list, setList] = useState([]); 
+
     useEffect(() => {
         getBooks().then(data => {
-            setList(data.entity);
+            setList(data.entity); 
         })
-    });
+    }, []);
+
     return (
         <div className="app">
             <section className="app-main">
@@ -23,14 +25,21 @@ function App() {
                     </a>
                 </h1>
                 <ul className="app-list">
-                    {Object.keys(list).map(key =>
-                        <li className="app-list-item" key={key}><b>{key}</b>:
-                            <a className="app-link"
-                               href={list[key]}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                            > {list[key]}</a>
-                        </li>)}
+                    {}
+                    {Array.isArray(list) && list.map((book, index) => (
+                        <li className="app-list-item" key={book.isbn || index}>
+                            {}
+                            <b>{book.name}</b>: {book.numberOfPages} сторінок
+                            
+                            {}
+                            <a 
+                                className="app-link"
+                                href={book.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            > (Деталі)</a>
+                        </li>
+                    ))}
                 </ul>
             </section>
         </div>

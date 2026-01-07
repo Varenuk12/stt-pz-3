@@ -1,15 +1,49 @@
-import {render, screen} from '@testing-library/react';
-import renderer from "react-test-renderer";
-import App from './App';
+import './App.css';
+import {getBooks, getListOfRestEndPoint} from './api/anapioficeandfire'
+import {useState, useEffect} from "react";
 
-test('renders learn anapioficeandfire link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/Learn An API of Ice And Fire/i);
-  expect(linkElement).toBeInTheDocument();
-});
+function App() {
+    const [list, setList] = useState([]); 
 
-test("Matches DOM Snapshot", () => {
-  const domTree = renderer.create(<App />).toJSON();
-  expect(domTree).toMatchSnapshot();
-});
+    useEffect(() => {
+        getBooks().then(data => {
+            setList(data.entity); 
+        })
+    }, []);
 
+    return (
+        <div className="app">
+            <section className="app-main">
+                <h1>
+                    <a
+                        className="app-link"
+                        href="https://www.anapioficeandfire.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Learn An API of Ice And Fire
+                    </a>
+                </h1>
+                <ul className="app-list">
+                    {}
+                    {Array.isArray(list) && list.map((book, index) => (
+                        <li className="app-list-item" key={book.isbn || index}>
+                            {}
+                            <b>{book.name}</b>: {book.numberOfPages} сторінок
+                            
+                            {}
+                            <a 
+                                className="app-link"
+                                href={book.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            > (Деталі)</a>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </div>
+    );
+}
+
+export default App;
